@@ -33,7 +33,7 @@
       }
 
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", "https://yjwedding-uploader.netlify.app/.netlify/functions/upload"); <!-- 正しいNetlifyエンドポイントに変更 -->
+      xhr.open("POST", "https://yjwedding.netlify.app/.netlify/functions/upload"); <!-- 正しいNetlifyエンドポイントに変更 -->
       xhr.upload.onprogress = (event) => {
         const percent = (event.loaded / event.total) * 100;
         document.getElementById("progressBar").value = percent;
