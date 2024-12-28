@@ -18,7 +18,6 @@
   <!-- ステータスメッセージ -->
   <div id="status"></div>
 
-  <!-- JavaScriptでアップロード機能を実装 -->
   <script>
     document.getElementById("uploadButton").addEventListener("click", () => {
       const files = document.getElementById("fileInput").files;
@@ -27,13 +26,21 @@
         return;
       }
 
+      // ファイルサイズ制限 (1GB)
+      for (let file of files) {
+        if (file.size > 1 * 1024 * 1024 * 1024) {
+          alert(`${file.name} はサイズが大きすぎます！ (1GB以下にしてください)`);
+          return;
+        }
+      }
+
       const formData = new FormData();
       for (let i = 0; i < files.length; i++) {
         formData.append("files", files[i]);
       }
 
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", "https://yjwedding.netlify.app/.netlify/functions/upload"); <!-- 正しいNetlifyエンドポイントに変更 -->
+      xhr.open("POST", "https://yjwedding.netlify.app/.netlify/functions/upload"); // エンドポイントURLを正しいものに変更
       xhr.upload.onprogress = (event) => {
         const percent = (event.loaded / event.total) * 100;
         document.getElementById("progressBar").value = percent;
@@ -44,6 +51,9 @@
         } else {
           document.getElementById("status").innerText = "アップロード失敗。";
         }
+      };
+      xhr.onerror = () => {
+        document.getElementById("status").innerText = "サーバーエラーが発生しました。";
       };
       xhr.send(formData);
     });
