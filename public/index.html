@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ファイルアップロード</title>
+</head>
+<body>
+  <h1>写真や動画をアップロードしてください</h1>
+
+  <!-- ファイル選択 -->
+  <input type="file" id="fileInput" multiple />
+
+  <!-- アップロードボタン -->
+  <button id="uploadButton">アップロード</button>
+
+  <!-- アップロード進捗バー -->
+  <progress id="progressBar" max="100" value="0"></progress>
+
+  <!-- ステータスメッセージ -->
+  <div id="status"></div>
+
+  <!-- JavaScriptでアップロード機能を実装 -->
+  <script>
+    document.getElementById("uploadButton").addEventListener("click", () => {
+      const files = document.getElementById("fileInput").files;
+      if (files.length === 0) {
+        alert("ファイルを選択してください！");
+        return;
+      }
+
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+      }
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://yjwedding-uploader.netlify.app/.netlify/functions/upload"); <!-- 正しいNetlifyエンドポイントに変更 -->
+      xhr.upload.onprogress = (event) => {
+        const percent = (event.loaded / event.total) * 100;
+        document.getElementById("progressBar").value = percent;
+      };
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          document.getElementById("status").innerText = "アップロード成功！";
+        } else {
+          document.getElementById("status").innerText = "アップロード失敗。";
+        }
+      };
+      xhr.send(formData);
+    });
+  </script>
+</body>
+</html>
