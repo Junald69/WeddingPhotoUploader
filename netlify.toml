@@ -1,2 +1,3 @@
 [build]
+  publish = "public"       # フロントエンドファイルのディレクトリ
   functions = "functions"  # Netlify Functionsのディレクトリ
